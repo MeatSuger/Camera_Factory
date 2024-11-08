@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "99738569046",
+    "project_id": "test-f3160",
+    "storage_bucket": "test-f3160.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99738569046:android:9eb6fb520f2ddd4232aef7",
+        "android_client_info": {
+          "package_name": "com.opencv.camerafactory"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMREhHp8OJPsWONNZqLwWVgqUMopvpcRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

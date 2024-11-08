@@ -126,5 +126,5 @@ fun drawImageProxy(imageProxy: ImageProxy?, holder: TextureView) {
     val executionTime = endTime - startTime
 
     // 输出执行时间到日志
-    Log.d("drawImageProxy", "Execution time: $executionTime ms")
+//    Log.d("drawImageProxy", "Execution time: $executionTime ms")
 }

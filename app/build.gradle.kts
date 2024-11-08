@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -10,6 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.opencv.camerafactory"
         minSdk = 28
+        //noinspection ExpiredTargetSdkVersion
         targetSdk = 32
         versionCode = 1
         versionName = "1.0"
@@ -50,13 +52,24 @@ android {
 }
 
 dependencies {
-    val camerax_version = "1.4.0-rc01"
+    implementation("com.google.firebase:firebase-messaging-ktx:24.0.3")
+    val camerax_version = "1.4.0"
     // implementation "androidx.camera:camera-core:${camerax_version}" // 可选，因为camera-camera2 包含了camera-core
     implementation("androidx.camera:camera-camera2:$camerax_version")
     implementation("androidx.camera:camera-lifecycle:$camerax_version")
     implementation("androidx.camera:camera-video:$camerax_version")
     implementation("androidx.camera:camera-view:$camerax_version")
     implementation("androidx.camera:camera-extensions:$camerax_version")
+
+
+    implementation (platform("com.google.firebase:firebase-bom:33.5.1"))
+
+    // Declare the dependencies for the desired Firebase products without specifying versions
+    // For example, declare the dependencies for Firebase Authentication and Cloud Firestore
+    implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation ("com.google.firebase:firebase-firestore-ktx")
+
+
     val accompanist_version = "0.35.0-alpha"
     implementation("com.google.accompanist:accompanist-permissions:$accompanist_version")
 

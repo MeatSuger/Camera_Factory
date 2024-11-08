@@ -1,9 +1,14 @@
 package com.opencv.camerafactory
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.Range
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.camera.core.CameraSelector
@@ -44,6 +49,8 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
 
 class MainActivity : ComponentActivity() {
@@ -75,26 +82,48 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@SuppressLint("InlinedApi")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ExampleCameraScreen() {
-
+    // 相机权限
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
-    LaunchedEffect(key1 = Unit) {
 
-        if (!cameraPermissionState.status.isGranted && !cameraPermissionState.status.shouldShowRationale) {
+    // 通知权限，仅在 Android 13 及以上版本请求
+    val notificationPermissionState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
 
+
+    LaunchedEffect(Unit) {
+        // 请求相机权限
+        if (!cameraPermissionState.status.isGranted) {
             cameraPermissionState.launchPermissionRequest()
         }
+
+        // 请求通知权限（仅限 Android 13 及以上版本）
+        notificationPermissionState.let {
+            if (!it.status.isGranted) {
+                it.launchPermissionRequest()
+            }
+        }
     }
-    if (cameraPermissionState.status.isGranted) {
-        // 相机权限已授权, 显示预览界面
-        ControlCamera()
 
-    } else {
-
-        // 未授权，显示未授权页面
-        NoCameraPermissionScreen(cameraPermissionState = cameraPermissionState)
+    when {
+        // 相机权限已授权时，检查通知权限
+        cameraPermissionState.status.isGranted -> {
+            if (notificationPermissionState.status?.isGranted == true || Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                // 如果通知权限已授权或不需要请求通知权限（低于 Android 13）
+                ControlCamera()
+            } else {
+                // 显示请求通知权限的界面或说明
+                if (notificationPermissionState != null) {
+                    NoNotificationPermissionScreen(notificationPermissionState)
+                }
+            }
+        }
+        else -> {
+            // 未授权相机权限，显示未授权页面
+            NoCameraPermissionScreen(cameraPermissionState)
+        }
     }
 }
 
@@ -125,6 +154,36 @@ fun NoCameraPermissionScreen(cameraPermissionState: PermissionState) {
         }
     }
 }
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun NoNotificationPermissionScreen(notificationPermissionState: PermissionState) {
+
+    // In this screen you should notify the user that the permission
+    // is required and maybe offer a button to start another camera perission request
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+        val textToShow = if (notificationPermissionState.status.shouldShowRationale) {
+
+            // 如果用户之前选择了拒绝该权限，应当向用户解释为什么应用程序需要这个权限
+            "未获取通知授权将导致该功能无法正常使用。"
+        } else {
+
+            // 首次请求授权
+            "该功能需要使用通知权限，请点击授权。"
+        }
+        Text(textToShow)
+        Spacer(Modifier.height(8.dp))
+
+        Button(onClick = {
+            notificationPermissionState.launchPermissionRequest()
+        }) {
+            Text("请求权限")
+        }
+    }
+}
+
+
 
 
 @androidx.annotation.OptIn(ExperimentalLensFacing::class)
@@ -186,11 +245,49 @@ fun ControlCamera() {
                         text = "前置摄像头", style = MaterialTheme.typography.bodyMedium
                     )
                 }
+                Button(
+                    onClick = {
+                        FirebaseMessaging.getInstance().token.addOnCompleteListener(
+                            OnCompleteListener { task ->
+                            if (!task.isSuccessful) {
+                                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
+                                return@OnCompleteListener
+                            }
 
-                SurfacePreviewCard(
-                    cameraController = cameraController,
-                    modifier = Modifier.size(screenWide.dp)
-                )
+                            // Get new FCM registration token
+                            val token = task.result
+
+                            Log.d("FCM", token)
+                                Toast.makeText(context, token,Toast.LENGTH_SHORT).show()
+                        })
+                    },
+                    modifier = Modifier
+                        .size(height = 50.dp, width = screenWide.dp)
+                        .padding(4.dp),
+                ) {
+                    Text(
+                        text = "FCM测试", style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Button(
+                    onClick = {
+                            val intent = Intent(context,myFirebaseMessagingService::class.java)
+                        context.startService(intent)
+                        Log.d("FCM","Service is start")
+                    },
+                    modifier = Modifier
+                        .size(height = 50.dp, width = screenWide.dp)
+                        .padding(4.dp),
+                ) {
+                    Text(
+                        text = "FCM服务启动", style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+//                SurfacePreviewCard(
+//                    cameraController = cameraController,
+//                    modifier = Modifier.size(screenWide.dp)
+//                )
             }
         }
     }
