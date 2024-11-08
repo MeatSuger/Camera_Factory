@@ -1,17 +1,11 @@
 package com.opencv.camerafactory
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageFormat
 import android.graphics.Matrix
 import android.graphics.PixelFormat
-import android.graphics.Rect
-import android.graphics.YuvImage
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.camera.core.ImageProxy
-import androidx.camera.core.processing.util.GLUtils.TAG
 import androidx.camera.view.CameraController
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,16 +14,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import java.io.ByteArrayOutputStream
-import java.nio.ByteBuffer
 
 private val matrix = Matrix() // 复用Matrix对象
 private var bitmap: Bitmap? = null // 复用Bitmap对象
 
 @Composable
 fun ComposeSurfaceView(
-    cameraController: CameraController,
-    modifier: Modifier
+    cameraController: CameraController, modifier: Modifier
 ) {
     Scaffold(modifier = modifier) { innerPadding: PaddingValues ->
 
@@ -39,31 +30,28 @@ fun ComposeSurfaceView(
                 .padding(innerPadding),
 
             factory = { context ->
-                    SurfaceView(context).apply {
-                        holder.addCallback(object : SurfaceHolder.Callback {
-                            override fun surfaceCreated(holder: SurfaceHolder) {
-                                cameraController.setImageAnalysisAnalyzer(context.mainExecutor) {
-                                    drawImageProxy(it, holder)
-                                }
+                SurfaceView(context).apply {
+                    holder.addCallback(object : SurfaceHolder.Callback {
+                        override fun surfaceCreated(holder: SurfaceHolder) {
+                            cameraController.setImageAnalysisAnalyzer(context.mainExecutor) {
+                                drawImageProxy(it, holder)
                             }
+                        }
 
-                            override fun surfaceChanged(
-                                holder: SurfaceHolder,
-                                format: Int,
-                                width: Int,
-                                height: Int
-                            ) {
-    //                        TODO("Not yet implemented surface")
-                            }
+                        override fun surfaceChanged(
+                            holder: SurfaceHolder, format: Int, width: Int, height: Int
+                        ) {
+                            //                        TODO("Not yet implemented surface")
+                        }
 
-                            override fun surfaceDestroyed(holder: SurfaceHolder) {
-    //                        TODO("Not yet implemented")
-                            }
+                        override fun surfaceDestroyed(holder: SurfaceHolder) {
+                            //                        TODO("Not yet implemented")
+                        }
 
-                        })
-                        holder.setFormat(PixelFormat.TRANSLUCENT)
-                        setZOrderOnTop(true)
-                    }
+                    })
+                    holder.setFormat(PixelFormat.TRANSLUCENT)
+                    setZOrderOnTop(true)
+                }
             },
         )
     }
