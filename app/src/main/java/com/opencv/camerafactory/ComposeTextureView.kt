@@ -2,11 +2,8 @@ package com.opencv.camerafactory
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
-import android.graphics.PixelFormat
 import android.graphics.SurfaceTexture
 import android.util.Log
-import android.view.SurfaceHolder
-import android.view.SurfaceView
 import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import androidx.camera.core.ImageProxy
@@ -81,7 +78,7 @@ fun drawImageProxy(imageProxy: ImageProxy?, holder: TextureView) {
 
     imageProxy?.let { proxy ->
         val canvas = holder.lockCanvas()
-        try {
+        proxy.use { proxy ->
             bitmap =
                 if (bitmap == null || bitmap!!.width != proxy.width || bitmap!!.height != proxy.height) {
                     Bitmap.createBitmap(proxy.width, proxy.height, Bitmap.Config.ARGB_8888)
@@ -117,9 +114,6 @@ fun drawImageProxy(imageProxy: ImageProxy?, holder: TextureView) {
                     holder.unlockCanvasAndPost(canvas)
                 }
             }
-
-        } finally {
-            proxy.close()
         }
     }
     val endTime = System.currentTimeMillis()

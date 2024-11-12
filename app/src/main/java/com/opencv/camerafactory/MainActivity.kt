@@ -53,12 +53,12 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             CameraFactoryTheme {
-
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     // 将 décor fits system 窗口设置为 false
-                    WindowCompat.setDecorFitsSystemWindows(window, false)
+                    WindowCompat.setDecorFitsSystemWindows(window, true)
                     //将窗口标志设置为布局无限制
                     window.setFlags(
                         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -90,7 +90,8 @@ fun ExampleCameraScreen() {
     val cameraPermissionState = rememberPermissionState(android.Manifest.permission.CAMERA)
 
     // 通知权限，仅在 Android 13 及以上版本请求
-    val notificationPermissionState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
+    val notificationPermissionState =
+        rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
 
 
     LaunchedEffect(Unit) {
@@ -120,6 +121,7 @@ fun ExampleCameraScreen() {
                 }
             }
         }
+
         else -> {
             // 未授权相机权限，显示未授权页面
             NoCameraPermissionScreen(cameraPermissionState)
@@ -131,8 +133,7 @@ fun ExampleCameraScreen() {
 @Composable
 fun NoCameraPermissionScreen(cameraPermissionState: PermissionState) {
 
-    // In this screen you should notify the user that the permission
-    // is required and maybe offer a button to start another camera perission request
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
         val textToShow = if (cameraPermissionState.status.shouldShowRationale) {
@@ -159,8 +160,7 @@ fun NoCameraPermissionScreen(cameraPermissionState: PermissionState) {
 @Composable
 fun NoNotificationPermissionScreen(notificationPermissionState: PermissionState) {
 
-    // In this screen you should notify the user that the permission
-    // is required and maybe offer a button to start another camera perission request
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
         val textToShow = if (notificationPermissionState.status.shouldShowRationale) {
@@ -177,6 +177,7 @@ fun NoNotificationPermissionScreen(notificationPermissionState: PermissionState)
 
         Button(onClick = {
             notificationPermissionState.launchPermissionRequest()
+            Log.d("FCM", "NoNotificationPermissionScreen: 已点击")
         }) {
             Text("请求权限")
         }
@@ -184,14 +185,12 @@ fun NoNotificationPermissionScreen(notificationPermissionState: PermissionState)
 }
 
 
-
-
 @androidx.annotation.OptIn(ExperimentalLensFacing::class)
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun ControlCamera() {
     val context = LocalContext.current
-    val lifeCycleOwner = LocalLifecycleOwner.current
+    val lifeCycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
     val cameraController = remember {
         LifecycleCameraController(context)
     }
@@ -200,11 +199,10 @@ fun ControlCamera() {
     cameraController.imageAnalysisResolutionSelector =
         ResolutionSelector.Builder().setResolutionStrategy(
             ResolutionStrategy(
-                android.util.Size(720, 720),
-                ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER
+                android.util.Size(720, 720), ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER
             )
         ).build()
-    cameraController.videoCaptureTargetFrameRate =  Range(30,30)
+    cameraController.videoCaptureTargetFrameRate = Range(30, 30)
     cameraController.bindToLifecycle(lifeCycleOwner)
     val screenWide: Int = LocalConfiguration.current.screenWidthDp
     CameraFactoryTheme {
@@ -249,17 +247,21 @@ fun ControlCamera() {
                     onClick = {
                         FirebaseMessaging.getInstance().token.addOnCompleteListener(
                             OnCompleteListener { task ->
-                            if (!task.isSuccessful) {
-                                Log.w("FCM", "Fetching FCM registration token failed", task.exception)
-                                return@OnCompleteListener
-                            }
+                                if (!task.isSuccessful) {
+                                    Log.w(
+                                        "FCM",
+                                        "Fetching FCM registration token failed",
+                                        task.exception
+                                    )
+                                    return@OnCompleteListener
+                                }
 
-                            // Get new FCM registration token
-                            val token = task.result
+                                // Get new FCM registration token
+                                val token = task.result
 
-                            Log.d("FCM", token)
-                                Toast.makeText(context, token,Toast.LENGTH_SHORT).show()
-                        })
+                                Log.d("FCM", token)
+                                Toast.makeText(context, token, Toast.LENGTH_SHORT).show()
+                            })
                     },
                     modifier = Modifier
                         .size(height = 50.dp, width = screenWide.dp)
@@ -271,9 +273,9 @@ fun ControlCamera() {
                 }
                 Button(
                     onClick = {
-                            val intent = Intent(context,myFirebaseMessagingService::class.java)
+                        val intent = Intent(context, MyFirebaseMessagingService::class.java)
                         context.startService(intent)
-                        Log.d("FCM","Service is start")
+                        Log.d("FCM", "Service is start")
                     },
                     modifier = Modifier
                         .size(height = 50.dp, width = screenWide.dp)
@@ -359,7 +361,8 @@ fun SurfacePreviewCard(
 }
 
 @Preview(
-    uiMode = Configuration.UI_MODE_NIGHT_NO, showSystemUi = false
+    uiMode = Configuration.UI_MODE_NIGHT_NO,
+    showSystemUi = false
 )
 @Composable
 fun perCard() {

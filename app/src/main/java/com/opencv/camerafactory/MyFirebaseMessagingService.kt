@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
-open class myFirebaseMessagingService : FirebaseMessagingService() {
+open class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private val channelId = "default_channel_id" // 设置通知通道ID
 
@@ -37,38 +37,36 @@ open class myFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        Log.d("FCM","The new Token is ${token}")
+        Log.d("FCM", "The new Token is $token")
         copyTokenToClipboard(token)
     }
 
     @SuppressLint("ObsoleteSdkInt", "ResourceAsColor")
     private fun showNotification(message: RemoteMessage.Notification) {
         // 创建通知管理器
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // 如果 Android 版本大于或等于 O（Android 8.0），需要创建通知渠道
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                channelId,
-                "转发FCM通知",
-                NotificationManager.IMPORTANCE_DEFAULT
+                channelId, "转发FCM通知", NotificationManager.IMPORTANCE_DEFAULT
             )
             notificationManager.createNotificationChannel(channel)
         }
 
         // 创建通知
-        val notification: Notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle(message.title)
-            .setContentText(message.body)
-            .setSmallIcon(R.mipmap.ic_launcher_foreground)
-            .setAutoCancel(true) // 点击通知后自动取消
-            .build()
+        val notification: Notification =
+            NotificationCompat.Builder(this, channelId).setContentTitle(message.title)
+                .setContentText(message.body).setSmallIcon(R.mipmap.ic_launcher_foreground)
+                .setAutoCancel(true) // 点击通知后自动取消
+                .build()
 
         // 显示通知
         notificationManager.notify(0, notification)
     }
 
-     fun copyTokenToClipboard(token: String) {
+    private fun copyTokenToClipboard(token: String) {
         // 获取系统的剪贴板管理器
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
@@ -78,6 +76,7 @@ open class myFirebaseMessagingService : FirebaseMessagingService() {
         // 将数据放到剪贴板
         clipboard.setPrimaryClip(clip)
 
-        Toast.makeText(applicationContext ,"${token} is copied to clipboard",Toast.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "$token is copied to clipboard", Toast.LENGTH_SHORT)
+            .show()
     }
 }
