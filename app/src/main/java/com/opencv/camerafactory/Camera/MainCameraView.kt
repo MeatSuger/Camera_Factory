@@ -1,7 +1,6 @@
 package com.opencv.camerafactory.Camera
 
-import android.content.Intent
-import android.util.Log
+
 import android.util.Range
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ExperimentalLensFacing
@@ -18,18 +17,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
-import com.opencv.camerafactory.FireBase.MyFirebaseMessagingService
 import com.opencv.camerafactory.PreviewCard
-import com.opencv.camerafactory.Util.copyTokenToClipboard
 import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
 
 

@@ -1,7 +1,6 @@
 package com.opencv.camerafactory.Camera
 
 import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.graphics.SurfaceTexture
 import android.util.Log
 import android.view.TextureView
@@ -17,8 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 
 
-//public val matrix = Matrix() // 复用Matrix对象
-//public var bitmap: Bitmap? = null // 复用Bitmap对象
 
 @Composable
 fun ComposeTextureView(
