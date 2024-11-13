@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -62,33 +63,41 @@ fun ControlCamera() {
                 // 相机预览
                 Row {
                     PreviewCard(
-                        cameraController = cameraController,
-                        modifier = Modifier.size(screenWidth.dp / 2)
+                        modifier = Modifier.size(screenWidth.dp / 2),
+                        cameraController = cameraController
                     )
                 }
 
                 // 后置摄像头按钮
                 Button(
+                    modifier = Modifier
+                        .size(height = 60.dp, width = (screenWidth.dp * 2) / 3)
+                        .padding(4.dp),
                     onClick = {
                         cameraController.cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
                     },
-                    modifier = Modifier
-                        .size(height = 50.dp, width = screenWidth.dp)
-                        .padding(4.dp)
+                    shape = RoundedCornerShape(20.dp),
                 ) {
-                    Text(text = "后置摄像头", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text = "后置摄像头",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
 
                 // 前置摄像头按钮
                 Button(
+                    modifier = Modifier
+                        .size(height = 60.dp, width = (screenWidth.dp * 2) / 3)
+                        .padding(4.dp),
                     onClick = {
                         cameraController.cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
                     },
-                    modifier = Modifier
-                        .size(height = 50.dp, width = screenWidth.dp)
-                        .padding(4.dp)
+                    shape = RoundedCornerShape(20.dp),
                 ) {
-                    Text(text = "前置摄像头", style = MaterialTheme.typography.bodyMedium)
+                    Text(
+                        text = "前置摄像头",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
             }
         }

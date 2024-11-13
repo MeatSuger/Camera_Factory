@@ -75,15 +75,15 @@ fun drawImageProxy(imageProxy: ImageProxy?, holder: TextureView) {
 
     imageProxy?.let { proxy ->
         val canvas = holder.lockCanvas()
-        proxy.use { proxy ->
+        proxy.use { mproxy ->
             bitmap =
-                if (bitmap == null || bitmap!!.width != proxy.width || bitmap!!.height != proxy.height) {
-                    Bitmap.createBitmap(proxy.width, proxy.height, Bitmap.Config.ARGB_8888)
+                if (bitmap == null || bitmap!!.width != mproxy.width || bitmap!!.height != mproxy.height) {
+                    Bitmap.createBitmap(mproxy.width, mproxy.height, Bitmap.Config.ARGB_8888)
                 } else {
                     bitmap
                 }
 
-            bitmap = proxy.toBitmap()
+            bitmap = mproxy.toBitmap()
 
 
             matrix.reset()

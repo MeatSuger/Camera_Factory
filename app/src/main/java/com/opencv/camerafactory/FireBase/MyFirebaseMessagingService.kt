@@ -40,29 +40,5 @@ open class MyFirebaseMessagingService : FirebaseMessagingService() {
        copyTokenToClipboard(this,token)
     }
 
-    @SuppressLint("ObsoleteSdkInt", "ResourceAsColor")
-    private fun showNotification(message: RemoteMessage.Notification) {
-        // 创建通知管理器
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        // 如果 Android 版本大于或等于 O（Android 8.0），需要创建通知渠道
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId, "转发FCM通知", NotificationManager.IMPORTANCE_DEFAULT
-            )
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        // 创建通知
-        val notification: Notification =
-            NotificationCompat.Builder(this, channelId).setContentTitle(message.title)
-                .setContentText(message.body).setSmallIcon(R.mipmap.ic_launcher_foreground)
-                .setAutoCancel(true) // 点击通知后自动取消
-                .build()
-
-        // 显示通知
-        notificationManager.notify(0, notification)
-    }
 
 }

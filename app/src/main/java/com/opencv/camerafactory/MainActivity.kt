@@ -2,11 +2,13 @@ package com.opencv.camerafactory
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -70,14 +73,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier
                         .background(Color.Transparent)
                         .systemBarsPadding()
-                        .height(2400.dp)
+                        .fillMaxHeight()
                 ) {
-                    WindowCompat.setDecorFitsSystemWindows(window, true)
-                    //将窗口标志设置为布局无限制
-                    window.setFlags(
-                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-                    )
+//                    WindowCompat.setDecorFitsSystemWindows(window, true)
+//                    //将窗口标志设置为布局无限制
+//                    window.setFlags(
+//                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+//                    )
                     // Example camera screen
                     ExampleCameraScreen()
                 }
@@ -168,6 +171,7 @@ fun MainPage() {
 
 //@Preview
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ExampleCameraScreen() {

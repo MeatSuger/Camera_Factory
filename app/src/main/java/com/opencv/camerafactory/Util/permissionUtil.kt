@@ -5,18 +5,11 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.core.content.ContextCompat.getSystemService
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.PermissionStatus
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -82,6 +75,7 @@ fun NotificationPermission() {
         notificationManager.createNotificationChannel(channel)
     }
 }
+
 // 创建一个 PreviewParameterProvider 来提供多个权限状态数据
 @OptIn(ExperimentalPermissionsApi::class)
 class MultiplePermissionsStateProvider : PreviewParameterProvider<List<Boolean>> {

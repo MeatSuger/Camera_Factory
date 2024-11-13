@@ -42,12 +42,11 @@ fun MainFireBaseView(viewModel: FireBaseViewMode = viewModel()) {
     val context = LocalContext.current
     val screenWide = LocalConfiguration.current.screenWidthDp
     val screenHigh = LocalConfiguration.current.screenHeightDp
-    val logText = viewModel.logText
+    var logText = viewModel.logText
     Surface(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Transparent)
-            .systemBarsPadding()
     ) {
 
         Column {
@@ -73,7 +72,7 @@ fun MainFireBaseView(viewModel: FireBaseViewMode = viewModel()) {
                     .size(height = 60.dp, width = (screenWide.dp * 2) / 3)
                     .padding(4.dp),
                 shape = RoundedCornerShape(20.dp),
-                onClick = { GetFireBaseToken(context)},
+                onClick = {  GetFireBaseToken(context) },
 //                colors = ButtonDefaults.buttonColors(
 //                    containerColor = MaterialTheme.colorScheme.primary,
 //                    contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -119,18 +118,21 @@ fun AnonymouslyLogin() {
 
 fun  GetFireBaseToken(context: Context) {
 
+    var string = "getfiled"
     FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
         if (!task.isSuccessful) {
             Log.w(
                 "FCM", "Fetching FCM registration token failed", task.exception
             )
+            string = task.exception.toString()
             return@OnCompleteListener
         }
         // Get new FCM registration token
         val token = task.result
 
         Log.d("FCM", token)
-
+        string = token
         copyTokenToClipboard(context, token)
     })
+
 }
