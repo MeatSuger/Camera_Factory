@@ -1,4 +1,4 @@
-package com.opencv.camerafactory
+package com.opencv.camerafactory.Camera
 
 import android.view.ViewGroup
 import android.widget.LinearLayout

@@ -1,18 +1,17 @@
-package com.opencv.camerafactory
+package com.opencv.camerafactory.FireBase
 
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.opencv.camerafactory.R
+import com.opencv.camerafactory.Util.copyTokenToClipboard
 
 open class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -26,7 +25,7 @@ open class MyFirebaseMessagingService : FirebaseMessagingService() {
             Log.d("FCM", "Message Notification Body: ${it.body}")
 
             // 在此处处理通知内容，例如显示系统通知
-            showNotification(it)
+//            showNotification(it)
         }
 
         // 处理数据消息部分（如果有）
@@ -38,7 +37,7 @@ open class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         Log.d("FCM", "The new Token is $token")
-        copyTokenToClipboard(token)
+       copyTokenToClipboard(this,token)
     }
 
     @SuppressLint("ObsoleteSdkInt", "ResourceAsColor")
@@ -66,17 +65,4 @@ open class MyFirebaseMessagingService : FirebaseMessagingService() {
         notificationManager.notify(0, notification)
     }
 
-    private fun copyTokenToClipboard(token: String) {
-        // 获取系统的剪贴板管理器
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-
-        // 创建一个 ClipData 对象，其中包含要复制的 token
-        val clip = ClipData.newPlainText("FCM Token", token)
-
-        // 将数据放到剪贴板
-        clipboard.setPrimaryClip(clip)
-
-        Toast.makeText(applicationContext, "$token is copied to clipboard", Toast.LENGTH_SHORT)
-            .show()
-    }
 }

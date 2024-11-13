@@ -1,4 +1,4 @@
-package com.opencv.camerafactory
+package com.opencv.camerafactory.Camera
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 
 
-private val matrix = Matrix() // 复用Matrix对象
-private var bitmap: Bitmap? = null // 复用Bitmap对象
+//public val matrix = Matrix() // 复用Matrix对象
+//public var bitmap: Bitmap? = null // 复用Bitmap对象
 
 @Composable
 fun ComposeTextureView(
