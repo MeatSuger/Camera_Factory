@@ -60,12 +60,12 @@ android {
 }
 
 dependencies {
-    val camerax_version = "1.4.0"
-    implementation("androidx.camera:camera-camera2:$camerax_version")
-    implementation("androidx.camera:camera-lifecycle:$camerax_version")
-    implementation("androidx.camera:camera-video:$camerax_version")
-    implementation("androidx.camera:camera-view:$camerax_version")
-    implementation("androidx.camera:camera-extensions:$camerax_version")
+    val cameraxVersion = "1.4.0"
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-video:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+    implementation("androidx.camera:camera-extensions:$cameraxVersion")
 
 
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
@@ -77,8 +77,8 @@ dependencies {
     implementation("com.google.firebase:firebase-inappmessaging-display")
     implementation("com.google.firebase:firebase-analytics")
 
-    val accompanist_version = "0.36.0"
-    implementation("com.google.accompanist:accompanist-permissions:$accompanist_version")
+    val accompanistVersion = "0.36.0"
+    implementation("com.google.accompanist:accompanist-permissions:$accompanistVersion")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")

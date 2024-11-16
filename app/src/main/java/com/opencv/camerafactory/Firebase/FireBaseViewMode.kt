@@ -1,11 +1,11 @@
-package com.opencv.camerafactory.FireBase
+package com.opencv.camerafactory.Firebase
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 
 class FireBaseViewMode:ViewModel() {
 
-    var logText by mutableStateOf(" ")
+    var logText by mutableStateOf("💀")
         private set
 
     // 更新 logText 的方法

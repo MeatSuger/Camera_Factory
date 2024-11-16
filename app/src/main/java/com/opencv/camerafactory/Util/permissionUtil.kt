@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -39,7 +38,7 @@ fun RequestPermissions() {
     val multiplePermissionsState = rememberMultiplePermissionsState(
         listOf(
             android.Manifest.permission.CAMERA,
-            android.Manifest.permission.POST_NOTIFICATIONS,
+//            android.Manifest.permission.POST_NOTIFICATIONS,
         )
     )
     if (multiplePermissionsState.allPermissionsGranted) {
@@ -48,13 +47,15 @@ fun RequestPermissions() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Transparent)
+                .background(MaterialTheme.colorScheme.surface),
+
         ) {
             FloatingActionButton(
                 modifier = Modifier
                     .padding(16.dp)
                     .align(Alignment.BottomEnd),
-                contentColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
                 onClick = { multiplePermissionsState.launchMultiplePermissionRequest() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowForward, "Floating action button.")
             }
@@ -64,7 +65,8 @@ fun RequestPermissions() {
                 horizontalAlignment = Alignment.CenterHorizontally // 水平方向居中
             ) {
                 Text(
-                    getTextToShowGivenPermissions(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    text = getTextToShowGivenPermissions(
                         multiplePermissionsState.revokedPermissions,
                         multiplePermissionsState.shouldShowRationale
                     )
@@ -75,7 +77,6 @@ fun RequestPermissions() {
         }
     }
 }
-
 
 @OptIn(ExperimentalPermissionsApi::class)
 fun getTextToShowGivenPermissions(

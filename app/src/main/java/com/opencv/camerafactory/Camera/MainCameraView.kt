@@ -1,24 +1,30 @@
 package com.opencv.camerafactory.Camera
 
 
+import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,16 +33,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.compose.CameraFactoryTheme
 import com.opencv.camerafactory.R
 import com.opencv.camerafactory.Util.CameraType
-import com.opencv.camerafactory.Util.CameraType.Companion.getDescription
-import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
 
 @Preview
 @Composable
@@ -87,16 +94,22 @@ fun MainCameraView(cameraViewModel: CameraViewModel = viewModel()) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewCard(
     modifier: Modifier,
     cameraController: LifecycleCameraController,
     cameraType: CameraType
 ) {
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false,
+    )
     Surface(
         shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(4.dp)
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = Modifier.padding(4.dp),
+        onClick = {showBottomSheet = true}
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Row(verticalAlignment = Alignment.Bottom) {
@@ -106,7 +119,8 @@ fun ViewCard(
                     modifier = Modifier.padding(top = 4.dp)
                 )
                 Text(
-                    text = cameraType.getDescription(), style = MaterialTheme.typography.bodyMedium
+                    text = cameraType.description(),
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 
@@ -117,7 +131,7 @@ fun ViewCard(
                 CameraType.ORIGINAL -> {
                     ComposeCameraView(
                         cameraController = cameraController,
-                        modifier = modifier
+                        modifier = modifier,
                     )
                 }
 
@@ -128,6 +142,18 @@ fun ViewCard(
                     contentDescription = null,
                     modifier = Modifier.size(120.dp)
                 )
+            }
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    modifier = Modifier.fillMaxHeight(),
+                    sheetState = sheetState,
+                    onDismissRequest = { showBottomSheet = false }
+                ) {
+                    Text(
+                        "Swipe up to open sheet. Swipe down to dismiss.",
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
             }
         }
     }

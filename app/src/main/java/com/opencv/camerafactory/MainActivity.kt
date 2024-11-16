@@ -1,13 +1,14 @@
 package com.opencv.camerafactory
 
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.Spring
@@ -17,6 +18,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,24 +45,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.CameraFactoryTheme
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.opencv.camerafactory.Camera.ComposeTextureView
 import com.opencv.camerafactory.Camera.MainCameraView
-import com.opencv.camerafactory.FireBase.MainFireBaseView
+import com.opencv.camerafactory.Firebase.MainFireBaseView
 import com.opencv.camerafactory.Util.NotificationPermission
 import com.opencv.camerafactory.Util.RequestPermissions
-import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
+
 
 class MainActivity : ComponentActivity() {
 
@@ -69,41 +72,28 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+
         setContent {
+//            WindowCompat.setDecorFitsSystemWindows(window, true)
+//            //将窗口标志设置为布局无限制
+//            window.setFlags(
+//                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+//            )
             CameraFactoryTheme {
                 NotificationPermission()
-                Surface(
-                    modifier = Modifier
-                        .background(Color.Transparent)
-                        .systemBarsPadding()
-                        .fillMaxHeight()
-                ) {
-//                    WindowCompat.setDecorFitsSystemWindows(window, true)
-//                    //将窗口标志设置为布局无限制
-//                    window.setFlags(
-//                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-//                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-//                    )
+//                Surface (
+//                    modifier = Modifier
+//                        .systemBarsPadding()
+//                        .fillMaxHeight(),
+//
+//                ) {
                     // Example camera screen
                     RequestPermissions()
-                }
+//                }
             }
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-        // 测试 Firebase 认证
-        val firebaseAuth = FirebaseAuth.getInstance()
-        firebaseAuth.signInAnonymously().addOnCompleteListener(this) { task ->
-            if (task.isSuccessful) {
-                Log.d("Firebase", "认证成功")
-            } else {
-                Log.d("Firebase", "认证失败", task.exception)
-            }
-        }
-    }
-
 }
 
 @Preview(showBackground = true, showSystemUi = true)
@@ -112,9 +102,8 @@ class MainActivity : ComponentActivity() {
 fun MainPage() {
     val navController = rememberNavController()
     val isPreview = LocalInspectionMode.current
-    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
     var selectedItem by remember { mutableIntStateOf(0) }
-    val items = listOf("Songs", "Artists", "Playlists")
+    val items = listOf("相机", "FireBase", "设置")
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -141,35 +130,35 @@ fun MainPage() {
                 }
             }
         },
-
-        ) { paddingValues ->
+    ) { paddingValues ->
         NavHost(
-            modifier = Modifier.padding(paddingValues).fillMaxHeight(),
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxHeight(),
             navController = navController,
             startDestination = items[0],
         ) {
-            composable(items[0], enterTransition = {
-                // 进入时使用淡入 + 从左侧滑入
-                fadeIn(
-                    animationSpec = tween(300, easing = LinearEasing) // 淡入动画
-                ) + slideIntoContainer(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy, // 中等弹性
-                        stiffness = Spring.StiffnessLow // 低刚度
-                    ),
-                    towards = AnimatedContentTransitionScope.SlideDirection.End
-                )
-            }, exitTransition = {
-                // 退出时使用淡出 + 从右侧滑出
-                fadeOut(
-                    animationSpec = tween(
-                        300, easing = LinearEasing
+            composable(items[0],
+                enterTransition = {
+                    // 进入时使用淡入 + 从左侧滑入
+                    fadeIn(
+                        animationSpec = tween(300, easing = LinearEasing) // 淡入动画
+                    ) + slideIntoContainer(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy, // 中等弹性
+                            stiffness = Spring.StiffnessLow // 低刚度
+                        ),
+                        towards = AnimatedContentTransitionScope.SlideDirection.End
                     )
-                ) + slideOutOfContainer(
-                    animationSpec = tween(300, easing = EaseOut),
-                    towards = AnimatedContentTransitionScope.SlideDirection.Start
-                )
-            }) {
+                }, exitTransition = {
+                    // 退出时使用淡出 + 从右侧滑出
+                    fadeOut(
+                        animationSpec = tween(300, easing = LinearEasing)
+                    ) + slideOutOfContainer(
+                        animationSpec = tween(300, easing = EaseOut),
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start
+                    )
+                }) {
                 if (isPreview) {
                     testperviewcard()
                 } else {
@@ -177,29 +166,34 @@ fun MainPage() {
                 }
             }
 
-            composable(items[1], enterTransition = {
-                // 进入时使用淡入 + 从左侧滑入
-                fadeIn(animationSpec = tween(300, easing = LinearEasing)) + slideIntoContainer(
-                    animationSpec = tween(300, easing = EaseIn),
-                    towards = AnimatedContentTransitionScope.SlideDirection.Start
-                )
-            }, exitTransition = {
-                // 退出时使用淡出 + 从右侧滑出
-                fadeOut(
-                    animationSpec = tween(
-                        300,
-                        easing = LinearEasing
+            composable(items[1],
+                enterTransition = {
+                    // 进入时使用淡入 + 从左侧滑入
+                    fadeIn(
+                        animationSpec = tween(300, easing = LinearEasing)
+                    ) + slideIntoContainer(
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                        ),
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start
                     )
-                ) + slideOutOfContainer(
-                    animationSpec = tween(300, easing = EaseOut),
-                    towards = AnimatedContentTransitionScope.SlideDirection.End
-                )
-            }) {
+                }, exitTransition = {
+                    // 退出时使用淡出 + 从右侧滑出
+                    fadeOut(
+                        animationSpec = tween(
+                            300, easing = LinearEasing
+                        )
+                    ) + slideOutOfContainer(
+                        animationSpec = tween(300, easing = EaseOut),
+                        towards = AnimatedContentTransitionScope.SlideDirection.End
+                    )
+                }) {
                 MainFireBaseView()
             }
 
             composable(items[2]) {
-                // SettingsScreen()
+
             }
         }
     }
