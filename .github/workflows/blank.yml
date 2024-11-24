@@ -19,14 +19,6 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
-    # 解密签名文件
-#    - name: 解密签名文件🔑
-#      env:
-#        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-#      run: |
-#        gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.GPG_PASSPHRASE }}" \
-#        --output "Camera compose 9.6.jks" "Camera compose 9.6.jks.gpg"
-
     # 缓存 Gradle 依赖
     - name: 缓存 Gradle 依赖
       uses: actions/cache@v3
@@ -54,10 +46,11 @@ jobs:
         ./gradlew assembleRelease
 
     # 创建 GitHub Release 并上传 APK
+    - run: mv app/build/outputs/apk/release/app-release.apk Compose_camera$GITHUB_REF_NAME.apk
     - name: 创建 GitHub Release 并上传 APK🙌
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "app/build/outputs/apk/release/app-release.apk"
+        artifacts: "*.apk"
         token: ${{ secrets.GITHUB_TOKEN }}
         generateReleaseNotes: true
         
