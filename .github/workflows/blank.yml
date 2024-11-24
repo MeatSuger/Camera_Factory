@@ -26,7 +26,7 @@ jobs:
       env:
         GPG_PASSPHRASE: "yuhao1125"
       run: |
-        gpg --quiet --batch --yes --decrypt --passphrase=yuhao \
+        gpg --quiet --batch --yes --decrypt --passphrase=yuhao1125 \
         --output Camera compose 9.6.jks Camera compose 9.6.jks.gpg
 
     # 缓存 Gradle 依赖
