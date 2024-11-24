@@ -53,34 +53,6 @@ jobs:
         chmod +x ./gradlew
         ./gradlew assembleRelease
 
-
-
-    - uses: r0adkll/sign-android-release@v1
-      id: sign_app
-      with:
-        releaseDirectory: app/build/outputs/apk/release
-        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-        alias: ${{ secrets.ALIAS }}
-        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-        keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-      env:
-          # override default build-tools version (33.0.0) -- optional
-        BUILD_TOOLS_VERSION: "35.0.2"
-
-      # 签名 APK
-#    - name: 签名 APK
-#      env:
-#        STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-#        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-#        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-#      run: |
-#        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-#        -keystore "Camera compose 9.6.jks" \
-#        -storepass $STORE_PASSWORD \
-#        -keypass $KEY_PASSWORD \
-#        app/build/outputs/apk/release/app-release.apk $KEY_ALIAS
-
     # 创建 GitHub Release 并上传 APK
     - name: 创建 GitHub Release 并上传 APK🙌
       uses: ncipollo/release-action@v1
