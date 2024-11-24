@@ -26,7 +26,7 @@ jobs:
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       run: |
-        gpg --quiet --batch --yes --decrypt --passphrase=$GPG_PASSPHRASE \
+        gpg --quiet --batch --yes --decrypt --passphrase= $GPG_PASSPHRASE \
         --output Camera compose 9.6.jks Camera compose 9.6.jks.gpg
 
     # 缓存 Gradle 依赖
@@ -50,7 +50,7 @@ jobs:
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
         jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-        -keystore my-release-key.jks \
+        -keystore Camera compose 9.6.jks \
         -storepass $STORE_PASSWORD \
         -keypass $KEY_PASSWORD \
         app/build/outputs/apk/release/app-release-unsigned.apk $KEY_ALIAS
