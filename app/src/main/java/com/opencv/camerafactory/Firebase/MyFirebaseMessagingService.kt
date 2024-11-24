@@ -7,7 +7,7 @@ import com.opencv.camerafactory.Util.copyTokenToClipboard
 
 open class MyFirebaseMessagingService : FirebaseMessagingService() {
 
-    private val channelId = "default_channel_id" // 设置通知通道ID
+
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         Log.d("FCM", "From: ${remoteMessage.from}")

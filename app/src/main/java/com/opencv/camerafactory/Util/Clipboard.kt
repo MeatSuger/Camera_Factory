@@ -6,7 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.os.PersistableBundle
-import android.widget.Toast
+
 
 
 fun copyTokenToClipboard(context: Context, token: String) {
@@ -26,7 +26,4 @@ fun copyTokenToClipboard(context: Context, token: String) {
 
     // 将数据放到剪贴板
     clipboard.setPrimaryClip(clip)
-
-    // 显示提示 Toast
-    Toast.makeText(context, "token is copied to clipboard", Toast.LENGTH_SHORT).show()
 }

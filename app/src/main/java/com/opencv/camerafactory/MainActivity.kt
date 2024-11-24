@@ -1,10 +1,7 @@
 package com.opencv.camerafactory
 
 import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.camera.view.LifecycleCameraController
@@ -17,8 +14,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Info
@@ -45,19 +39,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.compose.CameraFactoryTheme
+import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
 import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
 import com.opencv.camerafactory.Camera.ComposeTextureView
 import com.opencv.camerafactory.Camera.MainCameraView
 import com.opencv.camerafactory.Firebase.MainFireBaseView
@@ -88,8 +80,8 @@ class MainActivity : ComponentActivity() {
 //                        .fillMaxHeight(),
 //
 //                ) {
-                    // Example camera screen
-                    RequestPermissions()
+                // Example camera screen
+                RequestPermissions()
 //                }
             }
         }
@@ -160,7 +152,7 @@ fun MainPage() {
                     )
                 }) {
                 if (isPreview) {
-                    testperviewcard()
+                    TestPreviewCard()
                 } else {
                     MainCameraView()
                 }
@@ -201,88 +193,17 @@ fun MainPage() {
 }
 
 
+
+
+
 @Composable
-fun SurfacePreviewCard(
-    cameraController: LifecycleCameraController, modifier: Modifier
-) {
+fun TestPreviewCard() {
     Surface(
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(4.dp)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(verticalAlignment = Alignment.Bottom) {
-                Text(
-                    text = "预览效果",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-                Text(
-                    text = "灰度",
-                    style = MaterialTheme.typography.bodyMedium,
-                    textDecoration = TextDecoration.LineThrough
-                )
-            }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            ComposeTextureView(cameraController = cameraController, modifier = modifier)
-//            ComposeSurfaceView(cameraController = cameraController, modifier = modifier)
-        }
-    }
-
-
-}
-
-
-@Composable
-fun perCard() {
-    CameraFactoryTheme {
-
-//
-//        Surface(
-//            shape = MaterialTheme.shapes.medium,
-//            color = MaterialTheme.colorScheme.primary,
-//            modifier = Modifier.padding(4.dp)
-//        ) {
-//            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//                Row(verticalAlignment = Alignment.Bottom) {
-//                    Text(
-//                        text = "预览效果",
-//                        style = MaterialTheme.typography.titleLarge,
-//                        modifier = Modifier.padding(top = 4.dp)
-//                    )
-//                    Text(
-//                        text = "灰度", style = MaterialTheme.typography.bodyMedium
-//                    )
-//                }
-//
-//                Spacer(modifier = Modifier.height(4.dp))
-//
-//                Image(
-//                    painter = painterResource(R.drawable.test_pic),
-//                    contentDescription = null,
-//                    modifier = Modifier.size(120.dp)
-//
-//                )
-//            }
-//        }
-
-
-        MainPage()
-
-
-    }
-
-}
-
-@Composable
-fun testperviewcard() {
-    Surface(
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(4.dp)
-    ) {
+        val screenWidth = LocalConfiguration.current.screenWidthDp
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
@@ -300,7 +221,7 @@ fun testperviewcard() {
             Image(
                 painter = painterResource(R.drawable.test_pic),
                 contentDescription = null,
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier.size((screenWidth/2).dp)
 
             )
         }

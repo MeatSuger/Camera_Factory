@@ -5,6 +5,7 @@ import android.graphics.Matrix
 import android.graphics.PixelFormat
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.view.TextureView
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.CameraController
 import androidx.compose.foundation.layout.PaddingValues
@@ -57,8 +58,7 @@ fun ComposeSurfaceView(
     }
 }
 
-fun drawImageProxy(imageProxy: ImageProxy?, holder: SurfaceHolder) {
-    val startTime = System.currentTimeMillis()
+private fun drawImageProxy(imageProxy: ImageProxy?, holder: SurfaceHolder) {
 
     imageProxy?.let { proxy ->
         val canvas = holder.lockHardwareCanvas()
@@ -101,9 +101,4 @@ fun drawImageProxy(imageProxy: ImageProxy?, holder: SurfaceHolder) {
             proxy.close()
         }
     }
-    val endTime = System.currentTimeMillis()
-    val executionTime = endTime - startTime
-
-    // 输出执行时间到日志
-//    Log.d("drawImageProxy", "Execution time: $executionTime ms")
 }

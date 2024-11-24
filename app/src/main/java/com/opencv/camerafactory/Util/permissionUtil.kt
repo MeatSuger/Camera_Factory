@@ -87,7 +87,7 @@ fun getTextToShowGivenPermissions(
     if (revokedPermissionsSize == 0) return ""
 
     val textToShow = StringBuilder().apply {
-        append("这个 ")
+        append("此权限 ")
     }
 
     for (i in permissions.indices) {

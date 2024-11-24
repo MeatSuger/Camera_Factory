@@ -1,17 +1,17 @@
 package com.opencv.camerafactory.Camera
 
 
-import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,17 +33,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.compose.CameraFactoryTheme
 import com.opencv.camerafactory.R
 import com.opencv.camerafactory.Util.CameraType
+import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
 
 @Preview
 @Composable
@@ -65,11 +64,17 @@ fun MainCameraView(cameraViewModel: CameraViewModel = viewModel()) {
         ) {
             Column {
                 // 相机预览
-                ViewCard(
-                    modifier = Modifier.size(screenWidth.dp / 2),
-                    cameraController = cameraController,
-                    cameraType = CameraType.TEST
-                )
+                Row (Modifier.fillMaxWidth()){
+                    ViewCard(
+                        modifier = Modifier.weight(1f,fill = false),
+                        cameraController = cameraController,
+                        cameraType = CameraType.ORIGINAL
+                    )
+                    SurfacePreviewCard(
+                        modifier = Modifier.weight(1f),
+                        cameraController = cameraController
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 Box(modifier = Modifier.fillMaxSize()) {
                     FloatingActionButton(
@@ -86,7 +91,8 @@ fun MainCameraView(cameraViewModel: CameraViewModel = viewModel()) {
                             }
                             isFrontCamera = !isFrontCamera
                         }) {
-                        Icon(imageVector = Icons.Filled.Refresh, contentDescription = "切换摄像头")
+                        Icon(painter = painterResource(R.drawable.party_mode),
+                            contentDescription = "切换摄像头")
                     }
                 }
             }
@@ -108,8 +114,8 @@ fun ViewCard(
     Surface(
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceContainer,
-        modifier = Modifier.padding(4.dp),
-        onClick = {showBottomSheet = true}
+        modifier = modifier.padding(4.dp).aspectRatio(1f / 1f),
+        onClick = { showBottomSheet = true }
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Row(verticalAlignment = Alignment.Bottom) {
@@ -157,4 +163,37 @@ fun ViewCard(
             }
         }
     }
+}
+
+@Composable
+fun SurfacePreviewCard(
+    cameraController: LifecycleCameraController, modifier: Modifier
+) {
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier.padding(4.dp).aspectRatio(1f / 1f)
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(verticalAlignment = Alignment.Bottom) {
+                Text(
+                    text = "预览效果",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+                Text(
+                    text = "灰度",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textDecoration = TextDecoration.LineThrough
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            ComposeTextureView(cameraController = cameraController, modifier = modifier)
+//            ComposeSurfaceView(cameraController = cameraController, modifier = modifier)
+        }
+    }
+
+
 }

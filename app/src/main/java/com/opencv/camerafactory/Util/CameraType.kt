@@ -28,7 +28,6 @@ sealed class CameraType {
             GREY -> "灰度视图"    // 灰度处理
             GALS -> "高斯模糊效果视图" // 高斯模糊效果
             TEST -> "测试"
-            else -> "未知视图"
         }
     }
 }

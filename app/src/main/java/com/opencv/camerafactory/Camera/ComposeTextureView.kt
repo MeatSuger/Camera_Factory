@@ -7,6 +7,7 @@ import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import androidx.camera.core.ImageProxy
 import androidx.camera.view.CameraController
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,7 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-
 
 
 @Composable
@@ -38,7 +38,9 @@ fun ComposeTextureView(
                             height: Int
                         ) {
                             cameraController.setImageAnalysisAnalyzer(context.mainExecutor) { imageProxy ->
-                                drawImageProxy(imageProxy, this@apply)
+                                val rotation =  2
+                                drawImageProxy(imageProxy, this@apply,rotation)
+                                imageProxy.close()
                             }
 
                         }
@@ -62,7 +64,6 @@ fun ComposeTextureView(
                     }
                     isOpaque = false
 
-                    scaleX
                     Log.d("TAG", "ComposeTextureView: $isHardwareAccelerated")
                 }
             },
@@ -70,40 +71,36 @@ fun ComposeTextureView(
     }
 }
 
-fun drawImageProxy(imageProxy: ImageProxy?, holder: TextureView) {
-    val startTime = System.currentTimeMillis()
-
+fun drawImageProxy(imageProxy: ImageProxy?, holder: TextureView, rotation: Int?) {
     imageProxy?.let { proxy ->
         val canvas = holder.lockCanvas()
-        proxy.use { mproxy ->
+        proxy.use { mProxy ->
             bitmap =
-                if (bitmap == null || bitmap!!.width != mproxy.width || bitmap!!.height != mproxy.height) {
-                    Bitmap.createBitmap(mproxy.width, mproxy.height, Bitmap.Config.ARGB_8888)
+                if (bitmap == null || bitmap!!.width != mProxy.width || bitmap!!.height != mProxy.height) {
+                    Bitmap.createBitmap(mProxy.width, mProxy.height, Bitmap.Config.ARGB_8888)
                 } else {
                     bitmap
                 }
 
-            bitmap = mproxy.toBitmap()
-
-
+            bitmap = mProxy.toBitmap()
+            Log.d(
+                "drawImageProxy",
+                "Bitmap created with size: ${bitmap!!.width}x${bitmap!!.height}"
+            )
             matrix.reset()
-            matrix.preScale(0.75f,0.75f)
-            // 计算Bitmap的中心点
-            val cx = bitmap!!.width / 2.0F
-            val cy = bitmap!!.height / 2.0F
+            val scaleFactor = 0.75f
+            matrix.preScale(scaleFactor, scaleFactor)
 
-            // 将Matrix的旋转中心移动到Bitmap的中心
+            val cx = bitmap!!.width / 2f
+            val cy = bitmap!!.height / 2f
             matrix.preTranslate(-cx, -cy)
+            if (rotation != null) {
+                matrix.postRotate(-rotation*90f)
+            }
 
-            // 设置旋转角度，例如90度
-            matrix.postRotate(90.0F)
-
-
-            // 将Matrix平移回来，同时考虑旋转后的位置
-            val rotatedWidth = bitmap!!.height.toFloat()
-            val rotatedHeight = bitmap!!.width.toFloat()
-            matrix.postTranslate(rotatedWidth / 2.0F, rotatedHeight / 2.0F)
-
+            val rotatedWidth = bitmap!!.height * scaleFactor
+            val rotatedHeight = bitmap!!.width * scaleFactor
+            matrix.postTranslate(rotatedWidth / 2f, rotatedHeight / 2f)
 
             holder.post {
                 if (canvas != null) {
@@ -113,9 +110,4 @@ fun drawImageProxy(imageProxy: ImageProxy?, holder: TextureView) {
             }
         }
     }
-    val endTime = System.currentTimeMillis()
-    val executionTime = endTime - startTime
-
-    // 输出执行时间到日志
-//    Log.d("drawImageProxy", "Execution time: $executionTime ms")
 }

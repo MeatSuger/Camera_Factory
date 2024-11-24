@@ -1,7 +1,6 @@
 package com.opencv.camerafactory.Firebase
 
 import android.content.Context
-import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,8 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.Wallpapers
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.tasks.Task
@@ -39,12 +36,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.opencv.camerafactory.Util.copyTokenToClipboard
 
 
-@Preview(
-    showSystemUi = true,
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL,
-    wallpaper = Wallpapers.NONE
-)
 @Composable
 fun MainFireBaseView(viewModel: FireBaseViewMode = viewModel()) {
     val context = LocalContext.current
@@ -64,9 +55,9 @@ fun MainFireBaseView(viewModel: FireBaseViewMode = viewModel()) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Transparent),
+            .background(Color.Transparent)
+            .padding(4.dp),
     ) {
-
         Column {
             Column(
                 modifier = Modifier.height((screenHigh * 0.4).dp),
@@ -78,12 +69,8 @@ fun MainFireBaseView(viewModel: FireBaseViewMode = viewModel()) {
                     text = viewModel.logText,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-
-                    )
-
+                )
             }
-
-
             Button(
                 modifier = Modifier
                     .size(height = 60.dp, width = (screenWide.dp * 2) / 3)
@@ -94,7 +81,7 @@ fun MainFireBaseView(viewModel: FireBaseViewMode = viewModel()) {
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 onClick = {
-                    GetFireBaseToken(context) { token, error ->
+                    getFireBaseToken(context) { token, error ->
                         if (token != null) {
                             viewModel.updateLogText(token)
                         }
@@ -117,7 +104,7 @@ fun MainFireBaseView(viewModel: FireBaseViewMode = viewModel()) {
                 ),
                 shape = RoundedCornerShape(20.dp),
                 onClick = {
-                    AnonymouslyLogin()
+                    anonymouslyLogin()
                 },
             ) {
                 Text(text = "匿名登陆到Firebase")
@@ -130,7 +117,7 @@ fun MainFireBaseView(viewModel: FireBaseViewMode = viewModel()) {
     }
 }
 
-fun AnonymouslyLogin() {
+fun anonymouslyLogin() {
     val firebaseAuth = FirebaseAuth.getInstance()
     firebaseAuth.signInAnonymously().addOnCompleteListener { task ->
         if (task.isSuccessful) {
@@ -141,7 +128,7 @@ fun AnonymouslyLogin() {
     }
 }
 
-fun GetFireBaseToken(context: Context, onResult: (token: String?, error: String?) -> Unit) {
+fun getFireBaseToken(context: Context, onResult: (token: String?, error: String?) -> Unit) {
     FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
         if (!task.isSuccessful) {
             Log.w("FCM", "Fetching FCM registration token failed", task.exception)
