@@ -26,7 +26,7 @@ jobs:
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       run: |
-        gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.GPG_PASSPHRASE }}" \
+        gpg --quiet --batch --yes --decrypt --passphrase="${{secrets.GPG_PASSPHRASE}}" \
         --output Camera compose 9.6.jks Camera compose 9.6.jks.gpg
 
     # 缓存 Gradle 依赖
