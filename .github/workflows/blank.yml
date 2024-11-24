@@ -1,21 +1,19 @@
-name: Build and Sign Android APK
+name: 打包安卓apk📦
 
 on:
   push:
       tags:
         - "v*"
-
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
     steps:
     # 检出代码
     - uses: actions/checkout@v4
 
     # 设置 JDK 环境
-    - name: Set up JDK 17
+    - name: 设置 JDK 17 🔨
       uses: actions/setup-java@v4
       with:
         java-version: '17'
@@ -23,7 +21,7 @@ jobs:
         cache: gradle
 
     # 解密签名文件
-    - name: Decrypt keystore
+    - name: 解密签名文件🔑
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       run: |
@@ -31,7 +29,7 @@ jobs:
         --output "Camera compose 9.6.jks" "Camera compose 9.6.jks.gpg"
 
     # 缓存 Gradle 依赖
-    - name: Cache Gradle dependencies
+    - name: 缓存 Gradle 依赖
       uses: actions/cache@v3
       with:
         path: |
@@ -42,7 +40,7 @@ jobs:
           ${{ runner.os }}-gradle
 
         # 缓存 Gradle 构建缓存
-    - name: Cache Gradle build cache
+    - name: 缓存 Gradle 构建缓存
       uses: actions/cache@v3
       with:
         path: ~/app/build
@@ -50,15 +48,14 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-build
 
-          
-    # 授予 gradlew 执行权限
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./gradlew
-    - name: Build APK
-      run: ./gradlew assembleRelease
+
+    - name: 打包apk🚀
+      run: |
+        chmod +x ./gradlew
+        ./gradlew assembleRelease
 
     # 签名 APK
-    - name: Sign APK
+    - name: 签名 APK
       env:
         STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
@@ -71,11 +68,12 @@ jobs:
         app/build/outputs/apk/release/app-release.apk $KEY_ALIAS
 
     # 创建 GitHub Release 并上传 APK
-    - name: Create Release and Upload APK
+    - name: 创建 GitHub Release 并上传 APK🙌
       uses: ncipollo/release-action@v1
       with:
         artifacts: "app/build/outputs/apk/release/app-release.apk"
         token: ${{ secrets.GITHUB_TOKEN }}
         generateReleaseNotes: true
         
+
 
