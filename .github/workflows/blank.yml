@@ -40,6 +40,17 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle
+
+        # 缓存 Gradle 构建缓存
+    - name: Cache Gradle build cache
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches/build-cache-1
+        key: ${{ runner.os }}-gradle-build-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-build
+
+          
     # 授予 gradlew 执行权限
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
