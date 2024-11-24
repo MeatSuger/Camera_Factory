@@ -52,7 +52,7 @@ jobs:
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
       run: |
         jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-        -keystore Camera compose 9.6.jks \
+        -keystore "Camera compose 9.6.jks" \
         -storepass $STORE_PASSWORD \
         -keypass $KEY_PASSWORD \
         app/build/outputs/apk/release/app-release-unsigned.apk $KEY_ALIAS
