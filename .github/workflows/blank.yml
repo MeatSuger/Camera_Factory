@@ -1,0 +1,72 @@
+name: Build and Sign Android APK
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # 检出代码
+    - uses: actions/checkout@v4
+
+    # 设置 JDK 环境
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    # 解密签名文件
+    - name: Decrypt keystore
+      env:
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      run: |
+        gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.GPG_PASSPHRASE }}" \
+        --output Camera compose 9.6.jks Camera compose 9.6.jks.gpg
+
+    # 缓存 Gradle 依赖
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle
+
+    # 构建未签名的 APK
+    - name: Build APK
+      run: ./gradlew assembleRelease
+
+    # 签名 APK
+    - name: Sign APK
+      env:
+        STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      run: |
+        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+        -keystore my-release-key.jks \
+        -storepass $STORE_PASSWORD \
+        -keypass $KEY_PASSWORD \
+        app/build/outputs/apk/release/app-release-unsigned.apk $KEY_ALIAS
+
+    # 对齐签名后的 APK
+    - name: Align APK
+      run: |
+        $ANDROID_HOME/build-tools/33.0.0/zipalign -v 4 \
+        app/build/outputs/apk/release/app-release-unsigned.apk \
+        app/build/outputs/apk/release/app-release.apk
+    # 创建 GitHub Release 并上传 APK
+    - name: Create Release and Upload APK
+      uses: softprops/action-gh-release@v1
+      with:
+        files: app/build/outputs/apk/release/app-release.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+
