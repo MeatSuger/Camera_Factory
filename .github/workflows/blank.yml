@@ -24,10 +24,10 @@ jobs:
     # 解密签名文件
     - name: Decrypt keystore
       env:
-        GPG_PASSPHRASE: "yuhao1125"
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       run: |
-        gpg --quiet --batch --yes --decrypt --passphrase=yuhao1125 \
-        --output Camera compose 9.6.jks Camera compose 9.6.jks.gpg
+        gpg --quiet --batch --yes --decrypt --passphrase= $STORE_PASSWORD \
+        --output "Camera compose 9.6.jks" "Camera compose 9.6.jks.gpg"
 
     # 缓存 Gradle 依赖
     - name: Cache Gradle dependencies
