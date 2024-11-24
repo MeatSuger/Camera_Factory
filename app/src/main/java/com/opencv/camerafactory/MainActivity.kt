@@ -63,7 +63,12 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this)
 
         setContent {
-
+//            WindowCompat.setDecorFitsSystemWindows(window, true)
+//            //将窗口标志设置为布局无限制
+//            window.setFlags(
+//                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+//                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+//            )
             CameraFactoryTheme {
                 NotificationPermission()
 //                Surface (
