@@ -59,12 +59,6 @@ jobs:
         -keypass $KEY_PASSWORD \
         app/build/outputs/apk/release/app-release.apk $KEY_ALIAS
 
-    # 对齐签名后的 APK
-    - name: Align APK
-      run: |
-        $ANDROID_HOME/build-tools/33.0.0/zipalign -v 4 \
-        app/build/outputs/apk/release/app-release-unsigned.apk \
-        app/build/outputs/apk/release/app-release.apk
     # 创建 GitHub Release 并上传 APK
     - name: Create Release and Upload APK
       uses: softprops/action-gh-release@v1
