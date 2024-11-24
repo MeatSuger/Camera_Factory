@@ -15,7 +15,7 @@ android {
         create("release") {
             keyAlias = "key0"
             keyPassword = "yuhao1125"
-            storeFile = file("app/Camera compose 9.6.jks")
+            storeFile = file("Camera compose 9.6.jks")
             storePassword = "yuhao1125"
         }
     }
