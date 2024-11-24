@@ -3,7 +3,7 @@ name: Build and Sign Android APK
 on:
   push:
       tags:
-        -"v*"
+        - "v*"
 
 jobs:
   build:
