@@ -2,7 +2,8 @@ name: Build and Sign Android APK
 
 on:
   push:
-    branches: [ "master" ]
+      tags:
+        -"v*"
 
 jobs:
   build:
@@ -42,7 +43,6 @@ jobs:
     # 授予 gradlew 执行权限
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
-    # 构建未签名的 APK
     - name: Build APK
       run: ./gradlew assembleRelease
 
@@ -58,17 +58,6 @@ jobs:
         -storepass $STORE_PASSWORD \
         -keypass $KEY_PASSWORD \
         app/build/outputs/apk/release/app-release.apk $KEY_ALIAS
-
-        
-    - name: Create a new tag
-      env:
-          GITHUB_SHA: ${{ github.sha }}
-      run: |
-          TAG_NAME="v$(date +'%Y.%m.%d-%H.%M.%S')"
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git tag -a $TAG_NAME -m "Automated release $TAG_NAME"
-          git push origin $TAG_NAME
 
     # 创建 GitHub Release 并上传 APK
     - name: Create Release and Upload APK
