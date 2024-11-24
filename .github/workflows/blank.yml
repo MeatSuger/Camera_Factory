@@ -63,7 +63,12 @@ jobs:
         alias: ${{ secrets.ALIAS }}
         keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
-    # 签名 APK
+
+      env:
+          # override default build-tools version (33.0.0) -- optional
+        BUILD_TOOLS_VERSION: "35.0.2"
+
+      # 签名 APK
 #    - name: 签名 APK
 #      env:
 #        STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
