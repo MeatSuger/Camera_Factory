@@ -20,12 +20,12 @@ jobs:
         cache: gradle
 
     # 解密签名文件
-    - name: 解密签名文件🔑
-      env:
-        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      run: |
-        gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.GPG_PASSPHRASE }}" \
-        --output "Camera compose 9.6.jks" "Camera compose 9.6.jks.gpg"
+#    - name: 解密签名文件🔑
+#      env:
+#        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+#      run: |
+#        gpg --quiet --batch --yes --decrypt --passphrase="${{ secrets.GPG_PASSPHRASE }}" \
+#        --output "Camera compose 9.6.jks" "Camera compose 9.6.jks.gpg"
 
     # 缓存 Gradle 依赖
     - name: 缓存 Gradle 依赖
@@ -53,18 +53,28 @@ jobs:
         chmod +x ./gradlew
         ./gradlew assembleRelease
 
+
+
+    - uses: r0adkll/sign-android-release@v1
+      id: sign_app
+      with:
+        releaseDirectory: app/build/outputs/apk/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
     # 签名 APK
-    - name: 签名 APK
-      env:
-        STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-      run: |
-        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-        -keystore "Camera compose 9.6.jks" \
-        -storepass $STORE_PASSWORD \
-        -keypass $KEY_PASSWORD \
-        app/build/outputs/apk/release/app-release.apk $KEY_ALIAS
+#    - name: 签名 APK
+#      env:
+#        STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+#        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+#        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+#      run: |
+#        jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+#        -keystore "Camera compose 9.6.jks" \
+#        -storepass $STORE_PASSWORD \
+#        -keypass $KEY_PASSWORD \
+#        app/build/outputs/apk/release/app-release.apk $KEY_ALIAS
 
     # 创建 GitHub Release 并上传 APK
     - name: 创建 GitHub Release 并上传 APK🙌
