@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.camera.view.LifecycleCameraController
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseOut
 import androidx.compose.animation.core.LinearEasing
@@ -42,19 +41,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
 import com.google.firebase.FirebaseApp
-import com.opencv.camerafactory.Camera.ComposeTextureView
 import com.opencv.camerafactory.Camera.MainCameraView
 import com.opencv.camerafactory.Firebase.MainFireBaseView
 import com.opencv.camerafactory.Util.NotificationPermission
 import com.opencv.camerafactory.Util.RequestPermissions
+import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
 
 
 class MainActivity : ComponentActivity() {
@@ -95,24 +92,19 @@ fun MainPage() {
         bottomBar = {
             NavigationBar {
                 items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        icon = {
-                            when (index) {
-                                0 -> Icon(Icons.Filled.Info, contentDescription = item)
-                                1 -> Icon(Icons.Filled.AccountCircle, contentDescription = item)
-                                else -> Icon(Icons.Filled.Settings, contentDescription = item)
-                            }
-                        },
-                        label = { Text(item) },
-                        selected = selectedItem == index,
-                        onClick = {
+                    NavigationBarItem(icon = {
+                        when (index) {
+                            0 -> Icon(Icons.Filled.Info, contentDescription = item)
+                            1 -> Icon(Icons.Filled.AccountCircle, contentDescription = item)
+                            else -> Icon(Icons.Filled.Settings, contentDescription = item)
+                        }
+                    }, label = { Text(item) }, selected = selectedItem == index, onClick = {
 
-                            if (selectedItem != index) {  // 只在第一次选中时运行
-                                selectedItem = index
-                                navController.navigate(item)
-                            }
-                        },
-                        alwaysShowLabel = false
+                        if (selectedItem != index) {  // 只在第一次选中时运行
+                            selectedItem = index
+                            navController.navigate(item)
+                        }
+                    }, alwaysShowLabel = false
                     )
                 }
             }
@@ -125,27 +117,25 @@ fun MainPage() {
             navController = navController,
             startDestination = items[0],
         ) {
-            composable(items[0],
-                enterTransition = {
-                    // 进入时使用淡入 + 从左侧滑入
-                    fadeIn(
-                        animationSpec = tween(300, easing = LinearEasing) // 淡入动画
-                    ) + slideIntoContainer(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy, // 中等弹性
-                            stiffness = Spring.StiffnessLow // 低刚度
-                        ),
-                        towards = AnimatedContentTransitionScope.SlideDirection.End
-                    )
-                }, exitTransition = {
-                    // 退出时使用淡出 + 从右侧滑出
-                    fadeOut(
-                        animationSpec = tween(300, easing = LinearEasing)
-                    ) + slideOutOfContainer(
-                        animationSpec = tween(300, easing = EaseOut),
-                        towards = AnimatedContentTransitionScope.SlideDirection.Start
-                    )
-                }) {
+            composable(items[0], enterTransition = {
+                // 进入时使用淡入 + 从左侧滑入
+                fadeIn(
+                    animationSpec = tween(300, easing = LinearEasing) // 淡入动画
+                ) + slideIntoContainer(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy, // 中等弹性
+                        stiffness = Spring.StiffnessLow // 低刚度
+                    ), towards = AnimatedContentTransitionScope.SlideDirection.End
+                )
+            }, exitTransition = {
+                // 退出时使用淡出 + 从右侧滑出
+                fadeOut(
+                    animationSpec = tween(300, easing = LinearEasing)
+                ) + slideOutOfContainer(
+                    animationSpec = tween(300, easing = EaseOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            }) {
                 if (isPreview) {
                     TestPreviewCard()
                 } else {
@@ -153,29 +143,27 @@ fun MainPage() {
                 }
             }
 
-            composable(items[1],
-                enterTransition = {
-                    // 进入时使用淡入 + 从左侧滑入
-                    fadeIn(
-                        animationSpec = tween(300, easing = LinearEasing)
-                    ) + slideIntoContainer(
-                        animationSpec = spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
-                            stiffness = Spring.StiffnessLow
-                        ),
-                        towards = AnimatedContentTransitionScope.SlideDirection.Start
+            composable(items[1], enterTransition = {
+                // 进入时使用淡入 + 从左侧滑入
+                fadeIn(
+                    animationSpec = tween(300, easing = LinearEasing)
+                ) + slideIntoContainer(
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
+                    ), towards = AnimatedContentTransitionScope.SlideDirection.Start
+                )
+            }, exitTransition = {
+                // 退出时使用淡出 + 从右侧滑出
+                fadeOut(
+                    animationSpec = tween(
+                        300, easing = LinearEasing
                     )
-                }, exitTransition = {
-                    // 退出时使用淡出 + 从右侧滑出
-                    fadeOut(
-                        animationSpec = tween(
-                            300, easing = LinearEasing
-                        )
-                    ) + slideOutOfContainer(
-                        animationSpec = tween(300, easing = EaseOut),
-                        towards = AnimatedContentTransitionScope.SlideDirection.End
-                    )
-                }) {
+                ) + slideOutOfContainer(
+                    animationSpec = tween(300, easing = EaseOut),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End
+                )
+            }) {
                 MainFireBaseView()
             }
 
@@ -186,9 +174,6 @@ fun MainPage() {
     }
 
 }
-
-
-
 
 
 @Composable
@@ -216,7 +201,7 @@ fun TestPreviewCard() {
             Image(
                 painter = painterResource(R.drawable.test_pic),
                 contentDescription = null,
-                modifier = Modifier.size((screenWidth/2).dp)
+                modifier = Modifier.size((screenWidth / 2).dp)
 
             )
         }
