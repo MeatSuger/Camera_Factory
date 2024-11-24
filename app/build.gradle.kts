@@ -10,6 +10,16 @@ android {
     namespace = "com.opencv.camerafactory"
     compileSdk = 34
 
+
+    signingConfigs {
+        create("release") {
+            keyAlias = "key0"
+            keyPassword = "yuhao1125"
+            storeFile = file("app/Camera compose 9.6.jks")
+            storePassword = "yuhao1125"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.opencv.camerafactory"
         minSdk = 28
@@ -30,7 +40,7 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
 
         }
         debug {
