@@ -24,7 +24,7 @@ jobs:
     # 解密签名文件
     - name: Decrypt keystore
       env:
-        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        GPG_PASSPHRASE: "yuhao1125"
       run: |
         gpg --quiet --batch --yes --decrypt --passphrase= $GPG_PASSPHRASE \
         --output Camera compose 9.6.jks Camera compose 9.6.jks.gpg
