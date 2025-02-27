@@ -64,7 +64,7 @@ fun Preferences() {
                         SettingsTriStateCheckbox(
                             state = false,
                             title = { Text(text = "this is a title") },
-                            subtitle = { Text(text = "this is subtitle") },
+                            subtitle = { Text(text = "this is 二级描述") },
                             enabled = true,
                         )
                         SettingsMenuLink(
