@@ -67,15 +67,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             CameraFactoryTheme {
                 NotificationPermission()
-//                Surface (
-//                    modifier = Modifier
-//                        .systemBarsPadding()
-//                        .fillMaxHeight(),
-//
-//                ) {
+
                 // Example camera screen
                 RequestPermissions()
-//                }
             }
         }
     }
@@ -175,7 +169,6 @@ fun MainPage() {
             }
         }
     }
-
 }
 
 
