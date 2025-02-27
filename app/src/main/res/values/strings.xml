@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name" translatable="false">Compose相机实验</string>
+    <string name="title_activity_perferences">perferencesActivity</string>
 </resources>

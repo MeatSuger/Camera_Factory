@@ -51,7 +51,9 @@ import com.opencv.camerafactory.Camera.MainCameraView
 import com.opencv.camerafactory.Firebase.MainFireBaseView
 import com.opencv.camerafactory.Util.NotificationPermission
 import com.opencv.camerafactory.Util.RequestPermissions
+import com.opencv.camerafactory.perference.Preferences
 import com.opencv.camerafactory.ui.theme.CameraFactoryTheme
+import java.util.prefs.Preferences
 
 
 class MainActivity : ComponentActivity() {
@@ -121,10 +123,11 @@ fun MainPage() {
                 fadeIn(
                     animationSpec = tween(300, easing = LinearEasing) // 淡入动画
                 ) + slideIntoContainer(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy, // 中等弹性
-                        stiffness = Spring.StiffnessLow // 低刚度
-                    ), towards = AnimatedContentTransitionScope.SlideDirection.End
+//                    animationSpec = spring(
+//                        dampingRatio = Spring.DampingRatioMediumBouncy, // 中等弹性
+//                        stiffness = Spring.StiffnessLow // 低刚度
+//                    ),
+                    towards = AnimatedContentTransitionScope.SlideDirection.End
                 )
             }, exitTransition = {
                 // 退出时使用淡出 + 从右侧滑出
@@ -147,10 +150,11 @@ fun MainPage() {
                 fadeIn(
                     animationSpec = tween(300, easing = LinearEasing)
                 ) + slideIntoContainer(
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioMediumBouncy,
-                        stiffness = Spring.StiffnessLow
-                    ), towards = AnimatedContentTransitionScope.SlideDirection.Start
+//                    animationSpec = spring(
+//                        dampingRatio = Spring.DampingRatioMediumBouncy,
+//                        stiffness = Spring.StiffnessLow
+//                    ),
+                    towards = AnimatedContentTransitionScope.SlideDirection.Start
                 )
             }, exitTransition = {
                 // 退出时使用淡出 + 从右侧滑出
@@ -167,7 +171,7 @@ fun MainPage() {
             }
 
             composable(items[2]) {
-
+                Preferences()
             }
         }
     }

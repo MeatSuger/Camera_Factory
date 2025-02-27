@@ -49,12 +49,17 @@ android {
         }
 
     }
+//    externalNativeBuild{
+//        cmake{
+//            path  = File("src/main/cpp/CMakeLists.txt")
+//        }
+//    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -70,7 +75,7 @@ android {
 }
 
 dependencies {
-    val cameraxVersion = "1.4.0"
+    val cameraxVersion = "1.4.1"
     implementation("androidx.camera:camera-camera2:$cameraxVersion")
     implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
     implementation("androidx.camera:camera-video:$cameraxVersion")
@@ -99,6 +104,9 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-compose:2.8.3")
+    val version = "2.10.0"
+    implementation("com.github.alorma.compose-settings:ui-tiles:$version")
+    implementation("com.github.alorma.compose-settings:ui-tiles-extended:$version")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

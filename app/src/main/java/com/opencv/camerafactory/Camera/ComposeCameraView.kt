@@ -41,7 +41,6 @@ fun ComposeCameraView(
                     // 设置实现模式
                     implementationMode = PreviewView.ImplementationMode.PERFORMANCE
 
-
                 }.also { previewView ->
                     // 将cameraController绑定到previewView
                     previewView.controller = cameraController

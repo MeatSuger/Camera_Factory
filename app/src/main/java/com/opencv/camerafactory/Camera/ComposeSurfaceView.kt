@@ -29,7 +29,6 @@ fun ComposeSurfaceView(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-
             factory = { context ->
                 SurfaceView(context).apply {
                     holder.addCallback(object : SurfaceHolder.Callback {

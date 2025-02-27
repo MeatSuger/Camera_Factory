@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -51,7 +52,6 @@ fun MainCameraView(cameraViewModel: CameraViewModel = viewModel()) {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val cameraController = cameraViewModel.cameraController
     var isFrontCamera: Boolean by remember { mutableStateOf(false) }
-
     // 确保只有在需要使用摄像头时才执行摄像头初始化
     LaunchedEffect(lifecycleOwner) {
         // 设置其他属性
@@ -74,6 +74,10 @@ fun MainCameraView(cameraViewModel: CameraViewModel = viewModel()) {
                         modifier = Modifier.weight(1f),
                         cameraController = cameraController
                     )
+//
+//                    ComposeGLSurfaceView(
+//                        cameraController = cameraController,
+//                        )
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Box(modifier = Modifier.fillMaxSize()) {
@@ -135,6 +139,7 @@ fun ViewCard(
 
             when (cameraType) {
                 CameraType.ORIGINAL -> {
+
                     ComposeCameraView(
                         cameraController = cameraController,
                         modifier = modifier,
